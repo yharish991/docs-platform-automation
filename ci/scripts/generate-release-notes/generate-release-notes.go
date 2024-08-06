@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/blang/semver"
-	"github.com/jessevdk/go-flags"
 	"io"
 	"io/ioutil"
 	"log"
@@ -16,6 +14,9 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/blang/semver"
+	"github.com/jessevdk/go-flags"
 )
 
 type command struct {
@@ -77,6 +78,7 @@ func (c *command) execute() error {
 		matches := sectionRegex.FindSubmatch(line)
 		if len(matches) > 0 {
 			version := string(matches[1])
+			fmt.Println(version)
 
 			semverVersion, err := semver.Make(version)
 			if err != nil {
@@ -95,6 +97,8 @@ func (c *command) execute() error {
 			sections = appendLineToLastSection(line, sections)
 		}
 	}
+
+	fmt.Println(minorVersions)
 
 	if len(c.PatchNotesPath) > 0 {
 		for _, versionNumber := range c.PatchVersions {
@@ -190,7 +194,7 @@ func (c *command) createReleaseNoteLines(version semver.Version) ([]string, erro
 		}
 		lines = append(lines, strings.Split(contents, "\n")...)
 	}
-	
+
 	lines = append(lines, "")
 	return lines, nil
 }
@@ -321,7 +325,7 @@ func pushReleaseNotes(docsRepoDir, minorVersion string) error {
 
 		err, _ = runCommand(
 			docsRepoDir,
-			"git", "push", "-u", "origin", minorVersion,
+			"git", "push", "-u", "hy", minorVersion,
 		)
 
 		if err != nil {

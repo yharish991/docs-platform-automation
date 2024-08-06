@@ -11,9 +11,9 @@ import (
 
 func main() {
 
-	if len(os.Args) <= 3 {
-		log.Fatal("You must provide a path to the release notes, path to a version table, and a version number.")
-	}
+	//if len(os.Args) <= 3 {
+	//	log.Fatal("You must provide a path to the release notes, path to a version table, and a version number.")
+	//}
 
 	releaseNotesFile := os.Args[1]
 	versionTableFile := os.Args[2]
@@ -37,13 +37,12 @@ func main() {
 		log.Fatalf("Could not read version table file: %s", err)
 	}
 
-
 	notesSplitOnVersionSeparator := bytes.Split(releaseNotes, versionSeparator)
 
 	targetVersionSectionBisected := bytes.SplitN(notesSplitOnVersionSeparator[1], separatorForTableInsertion, 2)
 
 	err = checkVersionTableExists(targetVersionSectionBisected[0])
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("could not check versions table: %s", err)
 	}
 
@@ -70,7 +69,7 @@ func checkVersionExists(releaseNotes, versionSeparator []byte) error {
 
 func checkVersionTableExists(headerSection []byte) error {
 	if bytes.Contains(headerSection, []byte("|--")) {
-	 	return errors.New("the requested version already has a table in the release notes. Remove table or try a different version")
+		return errors.New("the requested version already has a table in the release notes. Remove table or try a different version")
 	}
 	return nil
 }
@@ -84,6 +83,6 @@ func addBackTargetVersionHeaderSeparator(notesSplitOnVersionSeparator, targetVer
 	notesSplitOnVersionSeparator[1] = bytes.Join(targetVersionSectionBisected, []byte("###"))
 }
 
-func addBackVersionSeparator(notesSplitOnVersionSeparator [][]byte, versionSeparator []byte) []byte{
+func addBackVersionSeparator(notesSplitOnVersionSeparator [][]byte, versionSeparator []byte) []byte {
 	return bytes.Join(notesSplitOnVersionSeparator, versionSeparator)
 }
