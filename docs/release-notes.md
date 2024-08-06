@@ -5,6 +5,12 @@
 </style>
 
 
+## v5.2.1
+August 6, 2024
+
+
+### Maintenance release
+
 ## v5.1.2
 June 15, 2023
 
